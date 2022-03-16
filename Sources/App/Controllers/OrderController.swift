@@ -3,11 +3,14 @@ import Fluent
 
 struct OrderController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let userMiddleware = UserAuthMiddleware()
-        let orderRoutes = routes.grouped("order")
-        let orderAuthUserRoutes = orderRoutes.grouped(userMiddleware)
+        let userAuthMiddlewareByUserId = UserAuthMiddlewareByUserId()
+        // let userMiddleware = UserAuthMiddleware()
+        
+        // let orderRoutes = routes.grouped("order")
+        // let orderAuthUserRoutes = orderRoutes.grouped(userMiddleware)
 
-        orderAuthUserRoutes.get(use: getLanding)
+        routes.grouped(userAuthMiddlewareByUserId).get(use: getLanding)
+        // orderAuthUserRoutes.get(use: getLanding)
         // orderAuthUserRoutes.post(use: createHandler)
         // orderAuthUserRoutes.get(use: getAllHandler)
         // orderAuthUserRoutes.get(":order_id", use: getOneHandler)
