@@ -132,6 +132,22 @@ final class Order: Model, Content, Codable {
         self.created_at = created_at
         self.updated_at = updated_at
     }
+
+    final class CheckId: Content, Codable {
+        var user_id: UUID
+
+        init(user_id: UUID){
+            self.user_id = user_id
+        }
+    }
+
+    final class CheckNumber: Content, Codable {
+        var num: Int
+
+        init(num: Int){
+            self.num = num
+        }
+    }
 }
 
 final class OrderUpdate: Content, Codable {
@@ -211,5 +227,21 @@ final class OrderLanding: Content, Codable {
 
     init(title: String) {
         self.title = title
+    }
+}
+
+
+
+extension Order {
+    func convertToPublic() -> Order.CheckId {
+        return Order.CheckId(user_id: user_id)
+    }
+}
+
+extension EventLoopFuture where Value: Order {
+    func convertToPublic() -> EventLoopFuture<Order.CheckId> {
+        return self.map { order in
+            return order.convertToPublic()
+        }
     }
 }
